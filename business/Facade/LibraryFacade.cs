@@ -6,7 +6,6 @@ using trabajoMetodologiaDSistemas.Models;
 namespace business.Facade
 {
     // Patron Facade - Implementacion de fachada para simplificar operaciones
-    // NOTA: Esta es una implementacion de EJEMPLO, no funcional
     // La fachada coordina multiples servicios y proporciona una API simple
     public class LibraryFacade : ILibraryFacade
     {

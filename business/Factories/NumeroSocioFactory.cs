@@ -1,7 +1,6 @@
 namespace business.Factories
 {
     // Patron Factory - Implementacion de la fabrica de numeros de socio
-    // NOTA: Esta es una implementacion de EJEMPLO
     // Centraliza la logica de generacion y validacion de numeros de socio
     public class NumeroSocioFactory : INumeroSocioFactory
     {
