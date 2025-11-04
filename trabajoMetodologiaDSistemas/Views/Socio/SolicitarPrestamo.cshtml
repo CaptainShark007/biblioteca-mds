@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Solicitar Préstamo";
+}
+
+<div class="container py-4">
+    <div class="card shadow-lg border-0 p-4 mx-auto" style="max-width: 600px;">
+        <h2 class="fw-bold text-success text-center mb-4">Solicitar Nuevo Préstamo</h2>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+        @if (ViewBag.Exito != null)
+        {
+            <div class="alert alert-success">@ViewBag.Exito</div>
+        }
+
+        <form method="post">
+            <div class="mb-3">
+                <label for="numeroSocio" class="form-label fw-semibold">Número de Socio:</label>
+                <input type="text" name="numeroSocio" class="form-control" required placeholder="Ej: NS000001" />
+                <small class="form-text text-muted">Ingrese su número de socio (formato: NS000001)</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="tituloLibro" class="form-label fw-semibold">Título del Libro:</label>
+                <input type="text" name="tituloLibro" class="form-control" required placeholder="Ej: Cien años de soledad" />
+                <small class="form-text text-muted">Ingrese el título exacto del libro que desea</small>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <a asp-action="Panel" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success">Solicitar Préstamo</button>
+            </div>
+        </form>
+    </div>
+</div>

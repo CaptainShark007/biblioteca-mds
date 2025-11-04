@@ -1,0 +1,25 @@
+@model trabajoMetodologiaDSistemas.Models.Socio
+@{
+    ViewData["Title"] = "Mi Número de Socio";
+}
+
+<div class="container py-4">
+    <div class="card shadow-lg border-0 p-4 text-center mx-auto" style="max-width: 500px;">
+        <h2 class="fw-bold text-primary mb-4">Mi Número de Socio</h2>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-warning">@ViewBag.Error</div>
+        }
+        else if (Model != null)
+        {
+            <div class="alert alert-info text-start mx-auto" style="max-width:400px;">
+                <strong>Nombre:</strong> @Model.Nombre <br />
+                <strong>DNI:</strong> @Model.Dni <br />
+                <strong>Número de Socio:</strong> <span class="fw-bold text-primary">@Model.NumeroSocio</span>
+            </div>
+        }
+
+        <a asp-action="Panel" class="btn btn-secondary mt-3">Volver al Panel</a>
+    </div>
+</div>

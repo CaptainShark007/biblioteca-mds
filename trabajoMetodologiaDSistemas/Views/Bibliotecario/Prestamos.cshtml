@@ -1,0 +1,116 @@
+﻿@model IEnumerable<trabajoMetodologiaDSistemas.Models.Prestamo>
+@{
+    ViewData["Title"] = "Gestión de Préstamos";
+    var estado = ViewBag.Estado as string ?? "activos";
+    var totalPrestamos = ViewBag.TotalPrestamos as int? ?? 0;
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary">📚 Gestión de Préstamos</h2>
+        <div class="btn-group">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h6 class="fw-semibold mb-2">Filtrar préstamos:</h6>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Prestamos" asp-route-estado="activos"
+                           class="btn @(estado == "activos" ? "btn-warning" : "btn-outline-warning")">
+                            Activos
+                        </a>
+                        <a asp-action="Prestamos" asp-route-estado="devueltos"
+                           class="btn @(estado == "devueltos" ? "btn-success" : "btn-outline-success")">
+                            Devueltos
+                        </a>
+                        <a asp-action="Prestamos" asp-route-estado="atrasados"
+                           class="btn @(estado == "atrasados" ? "btn-danger" : "btn-outline-danger")">
+                            Atrasados
+                        </a>
+                        <a asp-action="Prestamos" asp-route-estado="todos"
+                           class="btn @(estado == "todos" ? "btn-primary" : "btn-outline-primary")">
+                            Todos
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <small class="text-muted">
+                        Mostrando @totalPrestamos préstamos
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de préstamos -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Socio</th>
+                            <th>Libro</th>
+                            <th>Fecha Préstamo</th>
+                            <th>Fecha Límite</th>
+                            <th>Fecha Devolución</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var prestamo in Model)
+                        {
+                            var estaAtrasado = prestamo.FechaDevolucion == null && prestamo.FechaCorrespondienteDevolucion < DateTime.Now;
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">@prestamo.Socio?.Nombre</div>
+                                    <small class="text-muted">@prestamo.Socio?.NumeroSocio</small>
+                                </td>
+                                <td>@prestamo.Libro?.Titulo</td>
+                                <td>@prestamo.FechaPrestamo.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <span class="@(estaAtrasado ? "text-danger fw-bold" : "")">
+                                        @prestamo.FechaCorrespondienteDevolucion.ToString("dd/MM/yyyy")
+                                    </span>
+                                </td>
+                                <td>
+                                    @(prestamo.FechaDevolucion?.ToString("dd/MM/yyyy") ?? "-")
+                                </td>
+                                <td>
+                                    @if (prestamo.FechaDevolucion == null)
+                                    {
+                                        <span class="badge @(estaAtrasado ? "bg-danger" : "bg-warning")">
+                                            @(estaAtrasado ? "Atrasado" : "Activo")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Devuelto</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-4">
+                                    <div class="text-muted">
+                                        <i class="bi bi-journal-x display-4"></i>
+                                        <p class="mt-2">No se encontraron préstamos</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

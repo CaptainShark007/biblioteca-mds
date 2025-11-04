@@ -1,0 +1,3 @@
+1_creadas Clases libro, Socio, Prestamo, Multa
+2_creados Dtos para cada clase
+3_creados controladores metodos enpoints

@@ -1,0 +1,67 @@
+@{
+    ViewData["Title"] = "Registrar Devolución";
+    var prestamos = ViewBag.Prestamos as IEnumerable<dynamic>;
+}
+
+<div class="container py-4">
+    <div class="card shadow-lg border-0 p-4">
+        <h2 class="fw-bold text-center text-primary mb-4">Registrar Devolución</h2>
+
+        <form method="post" class="row g-3">
+            <div class="col-md-6">
+                <label for="tipoBusqueda" class="form-label fw-semibold">Buscar por:</label>
+                <select name="tipoBusqueda" class="form-select" required>
+                    <option value="">Seleccione...</option>
+                    <option value="numSocio">Número de Socio</option>
+                    <option value="dni">DNI</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="identificador" class="form-label fw-semibold">Valor:</label>
+                <input type="text" name="identificador" class="form-control" required />
+            </div>
+
+            <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+                <button type="submit" class="btn btn-warning">Buscar</button>
+                <a asp-action="Index" class="btn btn-secondary">Volver</a>
+            </div>
+        </form>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger mt-3">@ViewBag.Error</div>
+        }
+        @if (ViewBag.Exito != null)
+        {
+            <div class="alert alert-success mt-3">@ViewBag.Exito</div>
+        }
+
+        @if (prestamos != null && prestamos.Any())
+        {
+            <div class="mt-4">
+                <h5 class="fw-bold text-success mb-3">
+                    Préstamos activos del socio @ViewBag.NumeroSocio
+                </h5>
+                <form method="post">
+                    <input type="hidden" name="tipoBusqueda" value="@ViewBag.TipoBusqueda" />
+                    <input type="hidden" name="identificador" value="@ViewBag.Identificador" />
+
+                    <div class="form-group mb-3">
+                        <label for="prestamoSeleccionado" class="fw-semibold">Seleccione un préstamo:</label>
+                        <select name="prestamoSeleccionado" class="form-select" required>
+                            <option value="">Seleccione...</option>
+                            @foreach (var p in prestamos)
+                            {
+                                <option value="@p.IdPrestamo">
+                                    @p.Titulo — Préstamo: @(p.FechaPrestamo.ToString("dd/MM/yyyy")) — Límite: @(p.FechaCorrespondienteDevolucion.ToString("dd/MM/yyyy"))
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 py-2 fw-semibold">Registrar Devolución</button>
+                </form>
+            </div>
+        }
+    </div>
+</div>

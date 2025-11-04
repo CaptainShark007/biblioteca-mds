@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Mis Préstamos";
+    var prestamos = ViewBag.Prestamos as IEnumerable<dynamic>;
+}
+
+<div class="container py-4">
+    <div class="card shadow-lg border-0 p-4">
+        <h2 class="fw-bold text-primary text-center mb-4">Mis Préstamos</h2>
+
+        <form method="post" class="mb-4">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label for="numeroSocio" class="form-label fw-semibold">Número de Socio:</label>
+                    <input type="text" name="numeroSocio" class="form-control" required placeholder="Ej: NS000001" />
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-info w-100">Buscar Préstamos</button>
+                </div>
+            </div>
+        </form>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger mt-3">@ViewBag.Error</div>
+        }
+
+        @if (prestamos != null)
+        {
+            if (prestamos.Any())
+            {
+                <h5 class="fw-semibold text-success mb-3">Préstamos del Socio @ViewBag.NumeroSocio</h5>
+
+                <div class="table-responsive shadow-sm rounded-3">
+                    <table class="table table-striped table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Libro</th>
+                                <th>Fecha Préstamo</th>
+                                <th>Fecha Límite</th>
+                                <th>Fecha Devolución</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in prestamos)
+                            {
+                                <tr>
+                                    <td>@p.TituloLibro</td>
+                                    <td>@p.FechaPrestamo.ToString("dd/MM/yyyy")</td>
+                                    <td>@p.FechaCorrespondienteDevolucion.ToString("dd/MM/yyyy")</td>
+                                    <td>@(p.FechaDevolucion?.ToString("dd/MM/yyyy") ?? "-")</td>
+                                    <td>
+                                        <span class="badge @(p.Estado == "Activo" ? "bg-warning" : "bg-success")">
+                                            @p.Estado
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mt-3 text-center">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No existen préstamos para este socio.
+                </div>
+            }
+        }
+
+        <div class="text-center mt-4">
+            <a asp-action="Panel" class="btn btn-secondary">Volver al Panel</a>
+        </div>
+    </div>
+</div>

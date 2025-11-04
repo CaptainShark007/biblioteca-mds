@@ -1,0 +1,140 @@
+@{
+    ViewData["Title"] = "Consultar Multas";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-11">
+            <div class="card shadow">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-exclamation-triangle me-2 text-warning"></i>Consultar Mis Multas
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Mensajes -->
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <i class="bi bi-x-circle-fill me-2"></i>
+                            <div>@ViewBag.Error</div>
+                        </div>
+                    }
+
+                    <form asp-action="ConsultarMultas" method="post">
+                        @if (ViewBag.Multas == null)
+                        {
+                            <p class="text-muted mb-4">
+                                <i class="bi bi-info-circle me-2"></i>Ingrese su número de socio para consultar el estado de sus multas
+                            </p>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">
+                                    <i class="bi bi-person-badge me-1"></i>Número de Socio
+                                </label>
+                                <input type="text" name="numeroSocio" class="form-control form-control-lg" 
+                                       placeholder="Ingrese su número de socio" required />
+                                <small class="text-muted d-block mt-2">
+                                    <i class="bi bi-info-circle me-1"></i>Ejemplo: NS000001
+                                </small>
+                            </div>
+
+                            <div class="d-grid gap-3">
+                                <button type="submit" class="btn btn-warning btn-lg text-white">
+                                    <i class="bi bi-search me-2"></i>Consultar
+                                </button>
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                    <i class="bi bi-arrow-left me-2"></i>Volver
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info d-flex align-items-center mb-4">
+                                <i class="bi bi-person-check-fill me-2 fs-5"></i>
+                                <div>
+                                    <strong>Socio:</strong> @ViewBag.NombreSocio 
+                                    <span class="badge bg-info ms-2">@ViewBag.NumeroSocio</span>
+                                </div>
+                            </div>
+
+                            @if (ViewBag.Multas.Count > 0)
+                            {
+                                <h5 class="mb-3">
+                                    <i class="bi bi-clipboard-x me-2"></i>Registro de Multas
+                                    <span class="badge bg-warning text-dark ms-2">@ViewBag.Multas.Count</span>
+                                </h5>
+
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th><i class="bi bi-book me-2"></i>Libro</th>
+                                                <th><i class="bi bi-calendar-event me-2"></i>Fecha</th>
+                                                <th><i class="bi bi-currency-dollar me-2"></i>Monto</th>
+                                                <th><i class="bi bi-clock-history me-2"></i>Días Restricción</th>
+                                                <th><i class="bi bi-file-text me-2"></i>Descripción</th>
+                                                <th><i class="bi bi-speedometer2 me-2"></i>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var multa in ViewBag.Multas)
+                                            {
+                                                var estado = multa.ConsultarEstado();
+                                                var badgeClass = estado == "Pagada" ? "bg-success" : 
+                                                               estado == "Expirada" ? "bg-secondary" : "bg-danger";
+                                                var iconoEstado = estado == "Pagada" ? "check-circle-fill" : 
+                                                                estado == "Expirada" ? "x-circle-fill" : "exclamation-triangle-fill";
+                                                
+                                                <tr>
+                                                    <td><strong>@multa.Libro?.Titulo</strong></td>
+                                                    <td>@multa.Fecha.ToString("dd/MM/yyyy")</td>
+                                                    <td>
+                                                        @if (multa.Monto > 0)
+                                                        {
+                                                            <span class="text-danger fw-bold">$@multa.Monto.ToString("N2")</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-muted">-</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-warning text-dark">
+                                                            <i class="bi bi-clock me-1"></i>@multa.DiasRestringido días
+                                                        </span>
+                                                    </td>
+                                                    <td>@multa.Descripcion</td>
+                                                    <td>
+                                                        <span class="badge @badgeClass">
+                                                            <i class="bi bi-@iconoEstado me-1"></i>@estado
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-success d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill me-2 fs-4"></i>
+                                    <div>
+                                        <strong>¡Excelente!</strong> No tiene multas registradas
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="mt-4">
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                    <i class="bi bi-house-fill me-2"></i>Volver al Inicio
+                                </a>
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

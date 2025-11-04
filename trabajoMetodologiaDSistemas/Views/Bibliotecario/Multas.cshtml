@@ -1,0 +1,124 @@
+﻿@model IEnumerable<trabajoMetodologiaDSistemas.Models.Multa>
+@{
+    ViewData["Title"] = "Gestión de Multas";
+    var estado = ViewBag.Estado as string ?? "activas";
+    var totalMultas = ViewBag.TotalMultas as int? ?? 0;
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary">⚠️ Gestión de Multas</h2>
+        <div class="btn-group">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h6 class="fw-semibold mb-2">Filtrar multas:</h6>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Multas" asp-route-estado="activas"
+                           class="btn @(estado == "activas" ? "btn-danger" : "btn-outline-danger")">
+                            Activas
+                        </a>
+                        <a asp-action="Multas" asp-route-estado="expiradas"
+                           class="btn @(estado == "expiradas" ? "btn-secondary" : "btn-outline-secondary")">
+                            Expiradas
+                        </a>
+                        <a asp-action="Multas" asp-route-estado="todas"
+                           class="btn @(estado == "todas" ? "btn-primary" : "btn-outline-primary")">
+                            Todas
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <small class="text-muted">
+                        Mostrando @totalMultas multas
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de multas -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Socio</th>
+                            <th>Libro</th>
+                            <th>Fecha</th>
+                            <th>Días Restringido</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var multa in Model)
+                        {
+                            var fechaFin = multa.Fecha.AddDays(multa.DiasRestringido);
+                            var estaActiva = fechaFin > DateTime.Now;
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">@multa.Socio?.Nombre</div>
+                                    <small class="text-muted">@multa.Socio?.NumeroSocio</small>
+                                </td>
+                                <td>@multa.Libro?.Titulo</td>
+                                <td>@multa.Fecha.ToString("dd/MM/yyyy")</td>
+                                <td>@multa.DiasRestringido días</td>
+                                <td>@multa.Descripcion</td>
+                                <td>
+                                    <span class="badge @(estaActiva ? "bg-danger" : "bg-secondary")">
+                                        @(estaActiva ? "Activa" : "Expirada")
+                                    </span>
+                                    @if (estaActiva)
+                                    {
+                                        <br />
+                                        <small class="text-muted">
+                                            Hasta: @fechaFin.ToString("dd/MM/yyyy")
+                                        </small>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (estaActiva)
+                                    {
+                                        <form asp-action="EliminarMulta" method="post" class="d-inline">
+                                            <input type="hidden" name="id" value="@multa.IdMulta" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('¿Está seguro de eliminar esta multa?')">
+                                                <i class="bi bi-trash"></i> Eliminar
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    <div class="text-muted">
+                                        <i class="bi bi-check-circle display-4"></i>
+                                        <p class="mt-2">No se encontraron multas</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

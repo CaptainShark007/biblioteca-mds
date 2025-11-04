@@ -1,0 +1,12 @@
+@{
+    ViewData["Title"] = "Pruebas";
+}
+<h2>Pruebas</h2>
+<form asp-action="CargarLibrosRoundRobin" method="post" class="mb-3">
+    <button type="submit" class="btn btn-info">Poblar Libros</button>
+</form>
+@if (TempData["MensajeExito"] != null)
+{
+    <div class="alert alert-success">@TempData["MensajeExito"]</div>
+}
+<a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Volver al inicio</a>

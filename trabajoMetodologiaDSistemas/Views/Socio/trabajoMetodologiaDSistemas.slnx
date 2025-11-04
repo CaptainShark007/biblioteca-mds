@@ -1,0 +1,5 @@
+public class BuscarDniViewModel
+{
+    [Required(ErrorMessage = "Debe ingresar un DNI.")]
+    public string Dni { get; set; }
+}

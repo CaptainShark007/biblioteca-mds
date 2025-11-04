@@ -1,0 +1,31 @@
+﻿@model trabajoMetodologiaDSistemas.Models.Libro
+@{
+    ViewData["Title"] = "Editar Libro";
+}
+
+<div class="container mt-4">
+    <h3>✏️ Editar Libro</h3>
+    <form asp-action="Edit" method="post" class="mt-3">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label class="form-label">Título</label>
+            <input asp-for="Titulo" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Autor</label>
+            <input asp-for="Autor" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">ISBN</label>
+            <input asp-for="ISBN" type="number" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Cantidad Disponible</label>
+            <input asp-for="CantidadDisponible" type="number" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

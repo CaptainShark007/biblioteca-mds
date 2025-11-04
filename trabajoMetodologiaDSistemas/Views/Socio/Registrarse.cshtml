@@ -1,0 +1,80 @@
+﻿@model trabajoMetodologiaDSistemas.Models.Socio
+@{
+    ViewData["Title"] = "Registrarse como Socio";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9" style="min-width: 500px;">
+            <div class="card shadow">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-person-plus-fill me-2 text-primary"></i>Registro de Nuevo Socio
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Mensajes de error -->
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <i class="bi bi-exclamation-circle-fill me-2 flex-shrink-0"></i>
+                            <div>@ViewBag.Error</div>
+                        </div>
+                    }
+
+                    <p class="text-muted mb-4">Complete los siguientes datos para registrarse en la biblioteca</p>
+
+                    <form asp-action="Registrarse" method="post">
+                        <div class="mb-4">
+                            <label asp-for="Nombre" class="form-label fw-semibold">
+                                <i class="bi bi-person me-1"></i>Nombre Completo
+                            </label>
+                            <input asp-for="Nombre" class="form-control form-control-lg" 
+                                   placeholder="Ingrese su nombre completo" required />
+                            <span asp-validation-for="Nombre" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Dni" class="form-label fw-semibold">
+                                <i class="bi bi-card-text me-1"></i>DNI
+                            </label>
+                            <input asp-for="Dni" class="form-control form-control-lg" 
+                                   placeholder="Ingrese su DNI sin puntos" required />
+                            <span asp-validation-for="Dni" class="text-danger small"></span>
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-info-circle me-1"></i>Solo números, sin puntos ni espacios
+                            </small>
+                        </div>
+
+                        <div class="d-grid gap-3 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle me-2"></i>Registrarme
+                            </button>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="card mt-4 border-info">
+                <div class="card-body">
+                    <h6 class="fw-semibold mb-3">
+                        <i class="bi bi-info-circle-fill text-info me-2"></i>Información importante
+                    </h6>
+                    <ul class="small text-muted mb-0">
+                        <li class="mb-2">El DNI debe ser único, no puede haber dos socios con el mismo DNI</li>
+                        <li class="mb-2">Una vez registrado, recibirás un número de socio</li>
+                        <li>Con tu número de socio podrás solicitar préstamos de libros</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

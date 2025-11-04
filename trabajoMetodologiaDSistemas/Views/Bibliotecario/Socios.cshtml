@@ -1,0 +1,94 @@
+﻿@model IEnumerable<trabajoMetodologiaDSistemas.Models.Socio>
+@{
+    ViewData["Title"] = "Gestión de Socios";
+    var filtro = ViewBag.Filtro as string ?? "todos";
+    var totalSocios = ViewBag.TotalSocios as int? ?? 0;
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary">👥 Gestión de Socios</h2>
+        <div class="btn-group">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h6 class="fw-semibold mb-2">Filtrar socios:</h6>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Socios" asp-route-filtro="todos"
+                           class="btn @(filtro == "todos" ? "btn-primary" : "btn-outline-primary")">
+                            Todos (@totalSocios)
+                        </a>
+                        <a asp-action="Socios" asp-route-filtro="nuevos"
+                           class="btn @(filtro == "nuevos" ? "btn-success" : "btn-outline-success")">
+                            Nuevos
+                        </a>
+                        <a asp-action="Socios" asp-route-filtro="activos"
+                           class="btn @(filtro == "activos" ? "btn-warning" : "btn-outline-warning")">
+                            Con Préstamos
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <small class="text-muted">
+                        Mostrando @Model.Count() de @totalSocios socios
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de socios -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Número Socio</th>
+                            <th>Nombre</th>
+                            <th>DNI</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var socio in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="fw-bold text-primary">@socio.NumeroSocio</span>
+                                </td>
+                                <td>@socio.Nombre</td>
+                                <td>@socio.Dni</td>
+                                <td class="text-center">
+                                    <a asp-action="DetallesSocio" asp-route-id="@socio.IdSocio"
+                                       class="btn btn-sm btn-outline-info">
+                                        <i class="bi bi-eye"></i> Detalles
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center py-4">
+                                    <div class="text-muted">
+                                        <i class="bi bi-people display-4"></i>
+                                        <p class="mt-2">No se encontraron socios</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

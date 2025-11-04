@@ -1,0 +1,232 @@
+@{
+    ViewData["Title"] = "Devolver Libro";
+    
+    // Manejo seguro de ViewBag con verificación completa
+    List<trabajoMetodologiaDSistemas.Models.Prestamo> prestamosLista = new List<trabajoMetodologiaDSistemas.Models.Prestamo>();
+    trabajoMetodologiaDSistemas.Models.Prestamo prestamoSeleccionado = null;
+    
+    // Procesar prestamos activos de manera segura
+    if (ViewBag.PrestamosActivos != null)
+    {
+        try
+        {
+            var prestamosTemp = ViewBag.PrestamosActivos as IEnumerable<trabajoMetodologiaDSistemas.Models.Prestamo>;
+            if (prestamosTemp != null)
+            {
+                prestamosLista = prestamosTemp.Where(p => p != null && p.Libro != null).ToList();
+            }
+        }
+        catch
+        {
+            // Si falla el cast, la lista queda vacía
+        }
+    }
+    
+    // Procesar prestamo seleccionado de manera segura
+    if (ViewBag.PrestamoSeleccionado != null)
+    {
+        try
+        {
+            prestamoSeleccionado = ViewBag.PrestamoSeleccionado as trabajoMetodologiaDSistemas.Models.Prestamo;
+        }
+        catch
+        {
+            // Si falla, queda null
+        }
+    }
+    
+    bool tienePrestamosLista = prestamosLista != null && prestamosLista.Count > 0;
+    bool hayPrestamoSeleccionado = prestamoSeleccionado != null;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-11" style="min-width: 600px;">
+            <div class="card shadow">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-arrow-return-left me-2 text-success"></i>Devolución de Libro
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Mensajes -->
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <i class="bi bi-x-circle-fill me-2 flex-shrink-0"></i>
+                            <div>@ViewBag.Error</div>
+                        </div>
+                    }
+                    @if (ViewBag.Success != null)
+                    {
+                        <div class="alert alert-success d-flex align-items-center" role="alert">
+                            <i class="bi bi-check-circle-fill me-2 flex-shrink-0"></i>
+                            <div>@ViewBag.Success</div>
+                        </div>
+                    }
+
+                    <form asp-action="Devolver" method="post">
+                        @if (!tienePrestamosLista && !hayPrestamoSeleccionado)
+                        {
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="badge bg-success rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">1</span>
+                                    <h5 class="mb-0 fw-semibold">Identificación del Socio</h5>
+                                </div>
+                                
+                                <label class="form-label fw-semibold">
+                                    <i class="bi bi-person-badge me-1"></i>Número de Socio
+                                </label>
+                                <input type="text" name="numeroSocio" class="form-control form-control-lg" 
+                                       placeholder="Ingrese su número de socio" required />
+                                <small class="text-muted d-block mt-2">
+                                    <i class="bi bi-info-circle me-1"></i>Ejemplo: NS000001
+                                </small>
+                            </div>
+
+                            <div class="d-grid gap-3">
+                                <button type="submit" name="accion" value="buscarPrestamos" class="btn btn-success btn-lg">
+                                    <i class="bi bi-search me-2"></i>Buscar Préstamos
+                                </button>
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                    <i class="bi bi-arrow-left me-2"></i>Cancelar
+                                </a>
+                            </div>
+                        }
+                        else if (tienePrestamosLista && !hayPrestamoSeleccionado)
+                        {
+                            <input type="hidden" name="numeroSocio" value="@ViewBag.NumeroSocio" />
+                            
+                            <div class="alert alert-info d-flex align-items-center mb-4">
+                                <i class="bi bi-person-check-fill me-2 fs-5 flex-shrink-0"></i>
+                                <div>
+                                    <strong>Socio:</strong> @ViewBag.NombreSocio 
+                                    <span class="badge bg-info ms-2">@ViewBag.NumeroSocio</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center mb-4">
+                                <span class="badge bg-success rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">2</span>
+                                <h5 class="mb-0 fw-semibold">Seleccionar Libro a Devolver</h5>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th><i class="bi bi-book me-2"></i>Libro</th>
+                                            <th><i class="bi bi-calendar-event me-2"></i>Fecha Préstamo</th>
+                                            <th><i class="bi bi-calendar-check me-2"></i>Fecha Límite</th>
+                                            <th><i class="bi bi-speedometer2 me-2"></i>Estado</th>
+                                            <th class="text-center">Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (prestamosLista != null)
+                                        {
+                                            foreach (var prestamo in prestamosLista)
+                                            {
+                                                if (prestamo != null && prestamo.Libro != null)
+                                                {
+                                                    var diasRestantes = (prestamo.FechaCorrespondienteDevolucion - DateTime.Now).Days;
+                                                    var estiloEstado = diasRestantes < 0 ? "text-danger" : (diasRestantes <= 2 ? "text-warning" : "text-success");
+                                                    var textoEstado = diasRestantes < 0 ? $"Atrasado {Math.Abs(diasRestantes)} días" : $"{diasRestantes} días restantes";
+                                                    var iconoEstado = diasRestantes < 0 ? "exclamation-circle-fill" : (diasRestantes <= 2 ? "clock-fill" : "check-circle-fill");
+                                                            
+                                                    <tr>
+                                                        <td><strong>@prestamo.Libro.Titulo</strong></td>
+                                                        <td>@prestamo.FechaPrestamo.ToString("dd/MM/yyyy")</td>
+                                                        <td>@prestamo.FechaCorrespondienteDevolucion.ToString("dd/MM/yyyy")</td>
+                                                        <td>
+                                                            <span class="@estiloEstado fw-semibold">
+                                                                <i class="bi bi-@iconoEstado me-1"></i>@textoEstado
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button type="submit" name="accion" value="verificarEstado" 
+                                                                    onclick="document.getElementById('prestamoIdHidden').value = '@prestamo.IdPrestamo';"
+                                                                    class="btn btn-sm btn-success">
+                                                                <i class="bi bi-check-lg me-1"></i>Seleccionar
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <input type="hidden" id="prestamoIdHidden" name="prestamoId" value="" />
+
+                            <div class="mt-3">
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                                </a>
+                            </div>
+                        }
+                        else if (hayPrestamoSeleccionado)
+                        {
+                            <div class="alert alert-info d-flex align-items-center mb-4">
+                                <i class="bi bi-info-circle-fill me-2 fs-5 flex-shrink-0"></i>
+                                <div>
+                                    <strong>Socio:</strong> @(prestamoSeleccionado?.Socio?.Nombre ?? "Desconocido")
+                                    <span class="badge bg-info ms-2">@ViewBag.NumeroSocio</span>
+                                    <br/>
+                                    <strong>Libro:</strong> @(prestamoSeleccionado?.Libro?.Titulo ?? "Sin título")
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="prestamoId" value="@(prestamoSeleccionado?.IdPrestamo ?? 0)" />
+
+                            <div class="d-flex align-items-center mb-4">
+                                <span class="badge bg-success rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">3</span>
+                                <h5 class="mb-0 fw-semibold">Verificar Estado Físico del Libro</h5>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold mb-3">
+                                    <i class="bi bi-clipboard-check me-1"></i>¿En qué estado se encuentra el libro?
+                                </label>
+                                <div class="form-check mb-3 p-3 border rounded bg-light">
+                                    <input class="form-check-input" type="radio" name="estadoFisico" id="estadoBueno" value="bueno" required>
+                                    <label class="form-check-label w-100" for="estadoBueno">
+                                        <i class="bi bi-check-circle text-success me-2 fs-5"></i>
+                                        <strong>Buen estado</strong> (sin daños visibles)
+                                    </label>
+                                </div>
+                                <div class="form-check p-3 border rounded border-warning bg-light">
+                                    <input class="form-check-input" type="radio" name="estadoFisico" id="estadoMalo" value="malo" required>
+                                    <label class="form-check-label w-100" for="estadoMalo">
+                                        <i class="bi bi-exclamation-triangle text-warning me-2 fs-5"></i>
+                                        <strong>Mal estado</strong> (con daños o deterioro)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-warning d-flex align-items-start">
+                                <i class="bi bi-exclamation-triangle-fill me-3 fs-4 flex-shrink-0"></i>
+                                <div>
+                                    <strong class="d-block mb-2">Nota importante</strong>
+                                    <small>
+                                        <i class="bi bi-dot"></i> Si el libro presenta daños, se aplicará una multa de <strong>15 días</strong> de restricción.<br/>
+                                        <i class="bi bi-dot"></i> Si la devolución está atrasada, se aplicará <strong>1 día</strong> de restricción por cada día de retraso.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-3">
+                                <button type="submit" name="accion" value="finalizarDevolucion" class="btn btn-success btn-lg">
+                                    <i class="bi bi-check-circle-fill me-2"></i>Confirmar Devolución
+                                </button>
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                                </a>
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Panel Socio";
+}
+
+<div class="container py-4">
+    <div class="text-center mb-4">
+        <h1 class="fw-bold text-primary">Panel del Socio</h1>
+        <p class="text-muted">Accedé a tus datos, préstamos y libros disponibles</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm p-4 border-0 h-100">
+                <h5 class="fw-semibold mb-3">Mis Datos</h5>
+                <a class="btn btn-outline-primary w-100 mb-2" asp-action="MiNumero">Consultar mi número</a>
+                <a class="btn btn-outline-info w-100" asp-action="Registrarse">Registrarme como socio</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm p-4 border-0 h-100">
+                <h5 class="fw-semibold mb-3">Gestión de Libros</h5>
+                <a class="btn btn-outline-warning w-100" asp-controller="Libro" asp-action="Index">Ver Catálogo</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm p-4 border-0 h-100">
+                <h5 class="fw-semibold mb-3">Mis Préstamos</h5>
+                <a class="btn btn-outline-success w-100 mb-2" asp-action="SolicitarPrestamo">Nuevo Préstamo</a>
+                <a class="btn btn-outline-dark w-100" asp-action="MisPrestamos">Ver Mis Préstamos</a>
+            </div>
+        </div>
+    </div>
+</div>

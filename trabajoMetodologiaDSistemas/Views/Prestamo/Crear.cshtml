@@ -1,0 +1,113 @@
+@{
+    ViewData["Title"] = "Solicitar Préstamo";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Solicitar Préstamo de Libro</h4>
+                </div>
+                <div class="card-body p-4">
+                    @if (!string.IsNullOrEmpty(ViewBag.Error))
+                    {
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-circle me-2"></i>@ViewBag.Error
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(ViewBag.Exito))
+                    {
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle me-2"></i>@ViewBag.Exito
+                        </div>
+                    }
+
+                    @if (ViewBag.PrestamoRealizado == true)
+                    {
+                        <div class="text-center">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg">
+                                Volver al inicio
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <form method="post" asp-action="Crear">
+                            @Html.AntiForgeryToken()
+
+                            @* Paso 1: Validar Socio *@
+                            @if (ViewBag.SocioValido != true)
+                            {
+                                <div class="mb-4">
+                                    <h5 class="border-bottom pb-2 mb-3">1. Validar Socio</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Número de Socio</label>
+                                        <input type="text" class="form-control" name="numeroSocio" placeholder="Ej: NS000001" required>
+                                    </div>
+                                    <button type="submit" name="accion" value="validarSocio" class="btn btn-primary">
+                                        Validar
+                                    </button>
+                                </div>
+                            }
+
+                            @* Paso 2: Verificar Libro *@
+                            @if (ViewBag.SocioValido == true && ViewBag.LibroValido != true)
+                            {
+                                <div class="alert alert-success mb-3">
+                                    <strong>Socio:</strong> @ViewBag.NombreSocio (@ViewBag.NumeroSocio)
+                                </div>
+
+                                <input type="hidden" name="numeroSocio" value="@ViewBag.NumeroSocio" />
+                                <input type="hidden" name="idSocio" value="@ViewBag.IdSocio" />
+
+                                <div class="mb-4">
+                                    <h5 class="border-bottom pb-2 mb-3">2. Verificar Libro Disponible</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Título del Libro</label>
+                                        <input type="text" class="form-control" name="tituloLibro" placeholder="Ingrese título" required>
+                                    </div>
+                                    <button type="submit" name="accion" value="verificarLibro" class="btn btn-primary">
+                                        Verificar
+                                    </button>
+                                </div>
+                            }
+
+                            @* Paso 3: Confirmar Préstamo *@
+                            @if (ViewBag.LibroValido == true)
+                            {
+                                <div class="alert alert-success mb-3">
+                                    <strong>Socio:</strong> @ViewBag.NombreSocio (@ViewBag.NumeroSocio)
+                                </div>
+                                <div class="alert alert-info mb-3">
+                                    <strong>Libro:</strong> @ViewBag.TituloLibro<br />
+                                    <strong>Autor:</strong> @ViewBag.Autor<br />
+                                    <strong>Disponibles:</strong> @ViewBag.Disponibles
+                                </div>
+
+                                <input type="hidden" name="numeroSocio" value="@ViewBag.NumeroSocio" />
+                                <input type="hidden" name="idSocio" value="@ViewBag.IdSocio" />
+                                <input type="hidden" name="idLibro" value="@ViewBag.IdLibro" />
+
+                                <div class="mb-4">
+                                    <h5 class="border-bottom pb-2 mb-3">3. Confirmar Préstamo</h5>
+                                    <p class="text-muted">Fecha de devolución: 7 días</p>
+                                    <button type="submit" name="accion" value="registrarPrestamo" class="btn btn-success btn-lg">
+                                        Confirmar Préstamo
+                                    </button>
+                                </div>
+                            }
+
+                            <div class="text-center mt-3">
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                                    Cancelar
+                                </a>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

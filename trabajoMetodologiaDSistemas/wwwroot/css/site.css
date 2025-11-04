@@ -1,0 +1,402 @@
+:root {
+    --color-primary: #0d6efd;
+    --color-primary-light: #e7f1ff;
+    --color-secondary: #6610f2;
+    --color-bg: #f6f8fb;
+    --color-card-bg: #fff;
+    --color-text: #212529;
+    --radius: 0.75rem;
+    --transition: 0.25s ease;
+}
+
+/* GENERAL */
+body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 0.95rem;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+    a:hover {
+        color: var(--color-secondary);
+    }
+
+/* HEADER */
+.navbar {
+    transition: box-shadow var(--transition);
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #444;
+}
+
+    .navbar-light .navbar-nav .nav-link:hover {
+        color: var(--color-primary);
+    }
+
+/* SIDEBAR */
+.sidebar {
+    background: linear-gradient(180deg, #e9f0ff, #f6f8fb);
+    border-right: 1px solid #dee2e6;
+    transition: background var(--transition);
+}
+
+    .sidebar .nav-link {
+        padding: 0.65rem 1rem;
+        border-radius: var(--radius);
+        color: #3b3b3b;
+        font-weight: 500;
+        transition: all var(--transition);
+    }
+
+        .sidebar .nav-link:hover {
+            background-color: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+
+        .sidebar .nav-link.active {
+            background-color: var(--color-primary);
+            color: #fff !important;
+            box-shadow: 0 0 5px rgba(13, 110, 253, 0.25);
+        }
+
+/* CONTENT */
+.content {
+    background: var(--color-bg);
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    min-height: calc(100vh - 120px);
+}
+
+/* CARDS */
+.card {
+    border: none;
+    border-radius: var(--radius);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+.card-header {
+    background: #fff;
+    font-weight: 600;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* TABLES */
+.table {
+    background: #fff;
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+    .table thead {
+        background-color: var(--color-primary);
+        color: white;
+        font-weight: 600;
+    }
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9fbff;
+}
+
+/* BUTTONS */
+.btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    transition: all var(--transition);
+}
+
+    .btn-primary:hover {
+        background-color: var(--color-secondary);
+        border-color: var(--color-secondary);
+    }
+
+.btn-outline-primary {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+    .btn-outline-primary:hover {
+        background-color: var(--color-primary);
+        color: #fff;
+    }
+
+/* FORMS */
+.form-control {
+    border-radius: var(--radius);
+    border: 1px solid #ced4da;
+    transition: box-shadow var(--transition), border-color var(--transition);
+}
+
+    .form-control:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.15);
+    }
+
+/* FOOTER */
+.footer {
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    color: #6c757d;
+    font-size: 0.9rem;
+    padding: 0.75rem 0;
+}
+
+/* UTILITIES */
+.shadow-sm {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+.rounded-xl {
+    border-radius: var(--radius) !important;
+}
+
+/* === FIX: footer siempre al fondo === */
+html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+    body > .container {
+        flex: 1 0 auto;
+    }
+
+/* === HERO / HOME PAGE === */
+.hero-section {
+    min-height: calc(100vh - 150px);
+    background: linear-gradient(180deg, #ffffff, #f3f6fb);
+    border-radius: 1rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    margin-top: 1rem;
+}
+
+.hero-content h1 {
+    color: #0d6efd;
+    text-shadow: 0 1px 2px rgba(13, 110, 253, 0.2);
+}
+
+.hero-content p {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* === FIX: Layout mejorado para footer pegado al fondo === */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-container {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.content-wrapper {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Asegurar que el contenido principal crezca adecuadamente */
+.container-fluid .row.flex-grow-1 {
+    flex: 1;
+}
+
+/* Footer siempre al fondo */
+footer.footer {
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    color: #6c757d;
+    font-size: 0.9rem;
+    padding: 0.75rem 0;
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+/* Mejoras en el sidebar para altura completa */
+.sidebar {
+    background: linear-gradient(180deg, #e9f0ff, #f6f8fb);
+    border-right: 1px solid #dee2e6;
+    min-height: calc(100vh - 76px); /* Ajusta según la altura de tu header */
+    position: sticky;
+    top: 0;
+}
+
+/* Ajustes de contenido para evitar desbordamientos */
+.content {
+    background: var(--color-bg);
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    min-height: calc(100vh - 200px); /* Espacio para header y footer */
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .sidebar {
+        min-height: auto;
+        position: static;
+    }
+
+    .content {
+        min-height: auto;
+        padding-bottom: 1rem;
+    }
+}
+
+/* === FIX: Layout mejorado para footer siempre al fondo === */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-container {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 76px);
+}
+
+.content-wrapper {
+    flex: 1 0 auto;
+    display: flex;
+}
+
+/* Footer siempre al fondo */
+footer.footer {
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    color: #6c757d;
+    font-size: 0.9rem;
+    padding: 0.75rem 0;
+    margin-top: auto;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+/* Sidebar mejorado */
+.sidebar {
+    background: linear-gradient(180deg, #e9f0ff, #f6f8fb);
+    border-right: 1px solid #dee2e6;
+    min-height: calc(100vh - 76px);
+    position: sticky;
+    top: 0;
+}
+
+/* Asegurar que el contenido principal ocupe el espacio disponible */
+.main-content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Para vistas con poco contenido */
+.min-vh-content {
+    min-height: calc(100vh - 200px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .sidebar {
+        min-height: auto;
+        position: static;
+    }
+
+    .main-container {
+        min-height: auto;
+    }
+}
+
+/* === ESTILOS ESPECÍFICOS PARA FIX DEL FOOTER === */
+
+/* Clase para contenido que debe ocupar altura mínima */
+.min-vh-content {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Asegurar que las tarjetas ocupen altura completa y tengan contenido distribuido */
+.card.h-100 .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Para el contenido principal del bibliotecario */
+.bibliotecario-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 60vh;
+}
+
+/* Ajustes específicos para las estadísticas */
+.stats-card {
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Asegurar que el footer siempre esté abajo */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-container {
+    flex: 1;
+}
+
+/* Footer siempre en la parte inferior */
+footer.footer {
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .min-vh-content {
+        min-height: calc(100vh - 150px);
+        padding-bottom: 2rem;
+    }
+
+    .stats-card {
+        min-height: 100px;
+    }
+}
